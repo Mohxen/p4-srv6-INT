@@ -1,0 +1,11 @@
+FROM davidcc73/stratum_bmv2_x11_scapy_pip3:latest
+
+# Install Open vSwitch
+RUN apt-get update && apt-get install -y openvswitch-switch && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Ensure Open vSwitch is running before starting Mininet
+ENTRYPOINT service openvswitch-switch start && \
+           ovs-vsctl show && \
+           mn --topo minimal --mac --controller=remote,ip=127.0.0.1,port=6653
